@@ -11,7 +11,6 @@ from app.models.models import User, Role
 from app.schemas.schemas import UserCreate
 from app.repositories import user_repository, role_repository
 from app.core.security import get_password_hash
-from app.core.exceptions import UserNotFoundException
 
 
 class RegisterService:
@@ -20,16 +19,17 @@ class RegisterService:
     # Contraseñas comunes no permitidas
     COMMON_PASSWORDS = {
         '123456', 'password', 'qwerty', '123456789', '12345678', 
-        '12345', '111111', '1234567', 'sunshine', 'iloveyou'
+        '12345', '111111', '1234567', 'sunshine', 'iloveyou',
+        'admin', 'letmein', 'welcome', 'monkey', 'dragon'
     }
     
-    def validate_password_strength(self, password: str, username: str = None) -> tuple[bool, str]:
+    def validate_password_strength(self, password: str, user_data: dict = None) -> tuple[bool, str]:
         """
         Valida la fortaleza de la contraseña.
         
         Args:
             password: Contraseña a validar
-            username: Nombre de usuario (para verificar que no esté en la contraseña)
+            user_data: Datos del usuario (para verificar que no esté en la contraseña)
             
         Returns:
             Tuple (es_valida, mensaje_error)
@@ -58,9 +58,18 @@ class RegisterService:
         if password.lower() in self.COMMON_PASSWORDS:
             return False, "La contraseña es demasiado común. Por favor elija una más segura"
         
-        # Verificar que no contenga el nombre de usuario
-        if username and username.lower() in password.lower():
-            return False, "La contraseña no puede contener el nombre de usuario"
+        # Verificar que no contenga el nombre o apellido
+        if user_data:
+            first_name = user_data.get('first_name', '').lower()
+            last_name = user_data.get('last_name', '').lower()
+            email = user_data.get('email', '').lower()
+            
+            if first_name and first_name in password.lower():
+                return False, "La contraseña no puede contener su nombre"
+            if last_name and last_name in password.lower():
+                return False, "La contraseña no puede contener su apellido"
+            if email and email.split('@')[0] in password.lower():
+                return False, "La contraseña no puede contener su correo electrónico"
         
         return True, ""
     
@@ -87,27 +96,24 @@ class RegisterService:
             ValueError: Si los datos son inválidos
         """
         # Validar fortaleza de contraseña
-        is_valid, error_msg = self.validate_password_strength(
-            user_in.password, 
-            user_in.username
-        )
+        user_data = {
+            'first_name': user_in.first_name,
+            'last_name': user_in.last_name,
+            'email': user_in.email
+        }
+        is_valid, error_msg = self.validate_password_strength(user_in.password, user_data)
         if not is_valid:
             raise ValueError(error_msg)
         
-        # Verificar que el rol existe (por defecto Estudiante)
-        role_id = user_in.role_id if hasattr(user_in, 'role_id') and user_in.role_id else 3
+        # Verificar que el rol existe (por defecto Estudiante = 3)
+        role_id = user_in.role_id if user_in.role_id else 3
         role = role_repository.get(db, role_id)
         if not role:
             # Intentar obtener rol por nombre si no se encontró por ID
             role = role_repository.get_by_name(db, "Estudiante")
             if not role:
-                raise UserNotFoundException("El rol especificado no existe")
+                raise ValueError("El rol especificado no existe")
             role_id = role.id
-        
-        # Verificar que el username no exista
-        existing_user = user_repository.get_by_username(db, user_in.username)
-        if existing_user:
-            raise ValueError("El nombre de usuario ya está en uso")
         
         # Verificar que el email no exista
         existing_email = user_repository.get_by_email(db, user_in.email)
@@ -116,12 +122,15 @@ class RegisterService:
         
         # Crear usuario
         user_data = {
-            "username": user_in.username,
+            "first_name": user_in.first_name,
+            "last_name": user_in.last_name,
             "email": user_in.email,
-            "full_name": user_in.full_name,
             "password_hash": get_password_hash(user_in.password),
             "role_id": role_id,
-            "is_active": True
+            "career": user_in.career,
+            "semester": user_in.semester,
+            "is_active": True,
+            "status": "active"
         }
         
         user = User(**user_data)

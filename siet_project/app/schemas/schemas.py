@@ -33,30 +33,51 @@ class RoleResponse(RoleBase):
 
 class UserBase(BaseModel):
     """Esquema base para usuarios"""
-    username: str = Field(..., min_length=3, max_length=50)
+    first_name: str = Field(..., min_length=1, max_length=50)
+    last_name: str = Field(..., min_length=1, max_length=50)
     email: EmailStr
-    full_name: str = Field(..., min_length=1, max_length=100)
+    career: Optional[str] = Field(None, max_length=100)
+    semester: Optional[int] = Field(None, ge=1, le=12)
     role_id: int
 
 
 class UserCreate(UserBase):
     """Esquema para crear usuario"""
-    password: str = Field(..., min_length=6)
+    password: str = Field(..., min_length=8)
+    password_confirm: str = Field(..., min_length=8)
+    accept_terms: bool = False
+    
+    @classmethod
+    def validate_passwords_match(cls, values):
+        if values.get('password') != values.get('password_confirm'):
+            raise ValueError('Las contraseñas no coinciden')
+        return values
+    
+    @classmethod
+    def validate_terms_accepted(cls, values):
+        if not values.get('accept_terms'):
+            raise ValueError('Debe aceptar los términos y condiciones')
+        return values
 
 
 class UserUpdate(BaseModel):
     """Esquema para actualizar usuario"""
-    username: Optional[str] = Field(None, min_length=3, max_length=50)
+    first_name: Optional[str] = Field(None, min_length=1, max_length=50)
+    last_name: Optional[str] = Field(None, min_length=1, max_length=50)
     email: Optional[EmailStr] = None
-    full_name: Optional[str] = Field(None, min_length=1, max_length=100)
-    password: Optional[str] = Field(None, min_length=6)
+    career: Optional[str] = Field(None, max_length=100)
+    semester: Optional[int] = Field(None, ge=1, le=12)
+    password: Optional[str] = Field(None, min_length=8)
     is_active: Optional[bool] = None
 
 
 class UserResponse(UserBase):
     """Esquema de respuesta para usuario"""
     id: int
+    uuid: str
+    status: str
     is_active: bool
+    last_login: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime
     
@@ -65,7 +86,7 @@ class UserResponse(UserBase):
 
 class UserLogin(BaseModel):
     """Esquema para login"""
-    username: str
+    email: EmailStr
     password: str
 
 
@@ -493,6 +514,21 @@ class PasswordResetConfirm(BaseModel):
     """Esquema para confirmar recuperación de contraseña"""
     token: str
     new_password: str = Field(..., min_length=8)
+    
+    @classmethod
+    def validate_password_strength(cls, values):
+        password = values.get('new_password')
+        if len(password) < 8:
+            raise ValueError('La contraseña debe tener al menos 8 caracteres')
+        if not any(c.isupper() for c in password):
+            raise ValueError('La contraseña debe contener al menos una letra mayúscula')
+        if not any(c.islower() for c in password):
+            raise ValueError('La contraseña debe contener al menos una letra minúscula')
+        if not any(c.isdigit() for c in password):
+            raise ValueError('La contraseña debe contener al menos un número')
+        if not any(c in '!@#$%^&*(),.?":{}|<>_\\-+=[]\\\\;\'`~' for c in password):
+            raise ValueError('La contraseña debe contener al menos un carácter especial')
+        return values
 
 
 class PasswordResetToken(BaseModel):

@@ -19,42 +19,38 @@ class LoginService:
     def authenticate(
         self,
         db: Session,
-        username: str,
+        email: str,
         password: str
     ) -> Tuple[Optional[User], str]:
         """
-        Autentica un usuario con nombre de usuario y contraseña.
+        Autentica un usuario con email y contraseña.
         
         Args:
             db: Sesión de base de datos
-            username: Nombre de usuario o email
+            email: Email del usuario
             password: Contraseña
             
         Returns:
             Tuple (Usuario autenticado o None, mensaje de error)
         """
-        # Intentar buscar por username primero
-        user = user_repository.get_by_username(db, username)
-        
-        # Si no encuentra, intentar por email
-        if not user:
-            user = user_repository.get_by_email(db, username)
+        # Buscar por email
+        user = user_repository.get_by_email(db, email)
         
         if not user:
-            return None, "Usuario no encontrado"
+            return None, "Credenciales inválidas"
         
-        if not user.is_active:
+        if not user.is_active or user.status != "active":
             return None, "Usuario inactivo. Contacte al administrador"
         
         if not verify_password(password, user.password_hash):
-            return None, "Contraseña incorrecta"
+            return None, "Credenciales inválidas"
         
         return user, ""
     
     def login(
         self,
         db: Session,
-        username: str,
+        email: str,
         password: str,
         ip_address: Optional[str] = None,
         user_agent: Optional[str] = None
@@ -64,7 +60,7 @@ class LoginService:
         
         Args:
             db: Sesión de base de datos
-            username: Nombre de usuario o email
+            email: Email del usuario
             password: Contraseña
             ip_address: Dirección IP del cliente
             user_agent: User agent del navegador
@@ -76,7 +72,7 @@ class LoginService:
             ValueError: Si las credenciales son inválidas
         """
         # Autenticar usuario
-        user, error_msg = self.authenticate(db, username, password)
+        user, error_msg = self.authenticate(db, email, password)
         
         if not user:
             raise ValueError(error_msg)
@@ -84,14 +80,16 @@ class LoginService:
         # Crear tokens
         access_token = create_access_token(
             data={
-                "sub": user.username,
+                "sub": user.email,
                 "user_id": user.id,
-                "role": user.role.name if user.role else "unknown"
+                "role": user.role.name if user.role else "unknown",
+                "first_name": user.first_name,
+                "last_name": user.last_name
             }
         )
         
         refresh_token = create_refresh_token(
-            data={"sub": user.username, "user_id": user.id}
+            data={"sub": user.email, "user_id": user.id}
         )
         
         # Actualizar último login
@@ -108,9 +106,13 @@ class LoginService:
             "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
             "user": {
                 "id": user.id,
-                "username": user.username,
+                "uuid": user.uuid,
                 "email": user.email,
-                "full_name": user.full_name,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "full_name": f"{user.first_name} {user.last_name}",
+                "career": user.career,
+                "semester": user.semester,
                 "role": user.role.name if user.role else None,
                 "role_id": user.role_id
             },
@@ -173,9 +175,11 @@ class LoginService:
         # Crear nuevo access token
         access_token = create_access_token(
             data={
-                "sub": user.username,
+                "sub": user.email,
                 "user_id": user.id,
-                "role": user.role.name if user.role else "unknown"
+                "role": user.role.name if user.role else "unknown",
+                "first_name": user.first_name,
+                "last_name": user.last_name
             }
         )
         
