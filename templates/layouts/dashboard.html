@@ -1,0 +1,211 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="app-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar-siet" id="sidebar">
+        <div class="sidebar-brand">
+            <a href="/" class="navbar-brand-siet">
+                <i class="bi bi-shield-check"></i>
+                <span>SIET</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="sidebar-menu">
+                {% if current_user.role == 'estudiante' %}
+                <li class="sidebar-menu-item">
+                    <a href="/dashboard" class="sidebar-menu-link">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/evaluacion/redtic" class="sidebar-menu-link">
+                        <i class="bi bi-clipboard-data"></i>
+                        <span>RED-TIC</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/pruebas/cognitivas" class="sidebar-menu-link">
+                        <i class="bi bi-brain"></i>
+                        <span>Pruebas Cognitivas</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/resultados" class="sidebar-menu-link">
+                        <i class="bi bi-graph-up"></i>
+                        <span>Resultados</span>
+                    </a>
+                </li>
+                {% elif current_user.role == 'investigador' %}
+                <li class="sidebar-menu-item">
+                    <a href="/investigador/dashboard" class="sidebar-menu-link">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/investigador/participantes" class="sidebar-menu-link">
+                        <i class="bi bi-people"></i>
+                        <span>Participantes</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/investigador/reportes" class="sidebar-menu-link">
+                        <i class="bi bi-file-earmark-bar-graph"></i>
+                        <span>Reportes</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/investigador/exportar" class="sidebar-menu-link">
+                        <i class="bi bi-download"></i>
+                        <span>Exportar Datos</span>
+                    </a>
+                </li>
+                {% elif current_user.role == 'administrador' %}
+                <li class="sidebar-menu-item">
+                    <a href="/admin/dashboard" class="sidebar-menu-link">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/admin/usuarios" class="sidebar-menu-link">
+                        <i class="bi bi-people"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/admin/configuracion" class="sidebar-menu-link">
+                        <i class="bi bi-gear"></i>
+                        <span>Configuración</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/admin/logs" class="sidebar-menu-link">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Logs</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/admin/instrumentos" class="sidebar-menu-link">
+                        <i class="bi bi-tools"></i>
+                        <span>Instrumentos</span>
+                    </a>
+                </li>
+                {% endif %}
+                
+                <li class="sidebar-menu-item mt-4">
+                    <a href="/perfil" class="sidebar-menu-link">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Mi Perfil</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/logout" class="sidebar-menu-link text-error">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- Overlay for mobile -->
+    <div class="sidebar-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1020;"></div>
+    
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light sidebar-toggle d-lg-none" type="button" aria-label="Toggle sidebar">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="breadcrumb-container">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-siet mb-0">
+                                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                                {% block breadcrumb_items %}{% endblock %}
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Notifications -->
+                    <div class="dropdown">
+                        <button class="btn btn-light position-relative" type="button" data-bs-toggle="dropdown" aria-label="Notificaciones">
+                            <i class="bi bi-bell"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                3
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px;">
+                            <li><h6 class="dropdown-header">Notificaciones</h6></li>
+                            <li><a class="dropdown-item" href="#"><small>Nueva evaluación disponible</small></a></li>
+                            <li><a class="dropdown-item" href="#"><small>Resultados listos</small></a></li>
+                            <li><a class="dropdown-item" href="#"><small>Recordatorio de sesión</small></a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-center" href="#">Ver todas</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="dropdown">
+                        <button class="btn btn-light d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-label="Menú de usuario">
+                            <i class="bi bi-person-circle"></i>
+                            <span class="d-none d-md-inline">{{ current_user.name if current_user else 'Usuario' }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person"></i> Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="/configuracion"><i class="bi bi-gear"></i> Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-error" href="/logout"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Page Content -->
+        <div class="app-content" id="main-content">
+            {% block content %}{% endblock %}
+        </div>
+        
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <small>&copy; {{ now().year }} SIET - Sistema Inteligente de Evaluación de Tecnoestrés</small>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+                        <small>Proyecto de Investigación Universitaria</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toggle sidebar on mobile
+    document.querySelector('.sidebar-toggle')?.addEventListener('click', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.toggle('show');
+        overlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+    });
+    
+    document.querySelector('.sidebar-overlay')?.addEventListener('click', function() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.remove('show');
+        this.style.display = 'none';
+    });
+</script>
+{% endblock %}
