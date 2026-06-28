@@ -30,7 +30,9 @@ from app.repositories import (
     digitspan_repository,
     trailmaking_repository,
     crt_repository,
-    report_repository
+    report_repository,
+    learning_log_repository,
+    behavior_log_repository
 )
 from app.core.security import get_password_hash, verify_password, create_access_token
 from app.core.exceptions import (

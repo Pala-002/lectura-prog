@@ -454,3 +454,51 @@ class DashboardAdminResponse(BaseModel):
     total_students: int
     active_sessions: int
     system_status: str
+
+
+# ==================== AUDITORÍA ====================
+
+class AuditLogBase(BaseModel):
+    """Esquema base para logs de auditoría"""
+    action: str
+    module: Optional[str] = None
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    result: str
+    details: Optional[Dict[str, Any]] = None
+
+
+class AuditLogCreate(AuditLogBase):
+    """Esquema para crear log de auditoría"""
+    user_id: Optional[int] = None
+
+
+class AuditLogResponse(AuditLogBase):
+    """Esquema de respuesta para log de auditoría"""
+    id: int
+    user_id: Optional[int] = None
+    created_at: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ==================== RECUPERACIÓN DE CONTRASEÑA ====================
+
+class PasswordResetRequest(BaseModel):
+    """Esquema para solicitar recuperación de contraseña"""
+    email: EmailStr
+
+
+class PasswordResetConfirm(BaseModel):
+    """Esquema para confirmar recuperación de contraseña"""
+    token: str
+    new_password: str = Field(..., min_length=8)
+
+
+class PasswordResetToken(BaseModel):
+    """Esquema de token de recuperación"""
+    token: str
+    expires_at: datetime
+    used: bool
+    
+    model_config = ConfigDict(from_attributes=True)

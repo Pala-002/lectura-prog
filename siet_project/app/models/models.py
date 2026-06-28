@@ -34,6 +34,7 @@ class User(Base):
     full_name = Column(String(100), nullable=False)
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
     is_active = Column(Boolean, default=True)
+    last_login = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -296,3 +297,36 @@ class Report(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     user = relationship("User", back_populates="reports")
+
+
+class AuditLog(Base):
+    """Tabla de logs de auditoría"""
+    
+    __tablename__ = "audit_logs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    action = Column(String(100), nullable=False)  # login, logout, register, update_profile, etc.
+    module = Column(String(50))  # auth, users, redtic, cognitive_tests, etc.
+    ip_address = Column(String(45))
+    user_agent = Column(String(255))
+    result = Column(String(20))  # success, failure, error
+    details = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    
+    user = relationship("User", backref="audit_logs")
+
+
+class PasswordReset(Base):
+    """Tabla para recuperación de contraseñas"""
+    
+    __tablename__ = "password_reset"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    token = Column(String(255), unique=True, nullable=False, index=True)
+    expires_at = Column(DateTime, nullable=False)
+    used = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("User", backref="password_resets")
