@@ -19,22 +19,24 @@ class LoginService:
     def authenticate(
         self,
         db: Session,
-        email: str,
+        username_or_email: str,
         password: str
     ) -> Tuple[Optional[User], str]:
         """
-        Autentica un usuario con email y contraseña.
+        Autentica un usuario con username/email y contraseña.
         
         Args:
             db: Sesión de base de datos
-            email: Email del usuario
+            username_or_email: Username o email del usuario
             password: Contraseña
             
         Returns:
             Tuple (Usuario autenticado o None, mensaje de error)
         """
-        # Buscar por email
-        user = user_repository.get_by_email(db, email)
+        # Buscar por username o email
+        user = user_repository.get_by_username(db, username_or_email)
+        if not user:
+            user = user_repository.get_by_email(db, username_or_email)
         
         if not user:
             return None, "Credenciales inválidas"
@@ -50,7 +52,7 @@ class LoginService:
     def login(
         self,
         db: Session,
-        email: str,
+        username: str,
         password: str,
         ip_address: Optional[str] = None,
         user_agent: Optional[str] = None
@@ -60,7 +62,7 @@ class LoginService:
         
         Args:
             db: Sesión de base de datos
-            email: Email del usuario
+            username: Nombre de usuario o email
             password: Contraseña
             ip_address: Dirección IP del cliente
             user_agent: User agent del navegador
@@ -71,8 +73,8 @@ class LoginService:
         Raises:
             ValueError: Si las credenciales son inválidas
         """
-        # Autenticar usuario
-        user, error_msg = self.authenticate(db, email, password)
+        # Autenticar usuario (buscar por username o email)
+        user, error_msg = self.authenticate(db, username, password)
         
         if not user:
             raise ValueError(error_msg)

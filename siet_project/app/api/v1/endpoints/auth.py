@@ -72,7 +72,7 @@ async def login(
     try:
         result = login_service.login(
             db=db,
-            email=login_data.email,
+            username=login_data.username,
             password=login_data.password,
             ip_address=ip_address,
             user_agent=user_agent
@@ -90,7 +90,9 @@ async def login(
         return result
     except ValueError as e:
         # Buscar usuario para registrar en auditoría (si existe)
-        user = user_repository.get_by_email(db, login_data.email)
+        user = user_repository.get_by_username(db, login_data.username)
+        if not user:
+            user = user_repository.get_by_email(db, login_data.username)
         
         # Registrar login fallido en auditoría
         audit_service.log_login(
