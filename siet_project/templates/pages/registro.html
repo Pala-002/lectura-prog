@@ -1,0 +1,241 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Registro - SIET{% endblock %}
+
+{% block auth_content %}
+<form id="registroForm" action="/registro" method="POST" novalidate>
+    <!-- Nombre y Apellido -->
+    <div class="form-row">
+        <div class="form-group-siet">
+            <label for="nombre" class="form-label-siet form-label-required">Nombre</label>
+            <input 
+                type="text" 
+                class="form-control form-control-siet" 
+                id="nombre" 
+                name="nombre"
+                placeholder="Tu nombre"
+                required
+            >
+            <div class="form-feedback form-feedback-invalid">
+                El nombre es requerido
+            </div>
+        </div>
+        <div class="form-group-siet">
+            <label for="apellido" class="form-label-siet form-label-required">Apellido</label>
+            <input 
+                type="text" 
+                class="form-control form-control-siet" 
+                id="apellido" 
+                name="apellido"
+                placeholder="Tu apellido"
+                required
+            >
+            <div class="form-feedback form-feedback-invalid">
+                El apellido es requerido
+            </div>
+        </div>
+    </div>
+    
+    <!-- Correo Institucional -->
+    <div class="form-group-siet">
+        <label for="email" class="form-label-siet form-label-required">
+            <i class="bi bi-envelope me-1"></i>Correo Institucional
+        </label>
+        <input 
+            type="email" 
+            class="form-control form-control-siet" 
+            id="email" 
+            name="email"
+            placeholder="usuario@universidad.edu"
+            required
+        >
+        <div class="form-help">
+            <i class="bi bi-info-circle"></i>Debe ser un correo institucional válido
+        </div>
+        <div class="form-feedback form-feedback-invalid">
+            Ingresa un correo electrónico institucional válido
+        </div>
+    </div>
+    
+    <!-- Carrera -->
+    <div class="form-group-siet">
+        <label for="carrera" class="form-label-siet form-label-required">Carrera</label>
+        <select 
+            class="form-select form-control-siet" 
+            id="carrera" 
+            name="carrera"
+            required
+        >
+            <option value="">Selecciona tu carrera</option>
+            <option value="psicologia">Psicología</option>
+            <option value="medicina">Medicina</option>
+            <option value="ingenieria">Ingeniería</option>
+            <option value="derecho">Derecho</option>
+            <option value="administracion">Administración</option>
+            <option value="educacion">Educación</option>
+            <option value="comunicacion">Comunicación</option>
+            <option value="otra">Otra</option>
+        </select>
+        <div class="form-feedback form-feedback-invalid">
+            Selecciona una carrera
+        </div>
+    </div>
+    
+    <!-- Contraseña -->
+    <div class="form-group-siet">
+        <label for="password" class="form-label-siet form-label-required">
+            <i class="bi bi-lock me-1"></i>Contraseña
+        </label>
+        <input 
+            type="password" 
+            class="form-control form-control-siet" 
+            id="password" 
+            name="password"
+            placeholder="Mínimo 8 caracteres"
+            required
+            minlength="8"
+        >
+        <div class="password-strength mt-2">
+            <div class="password-strength-bar">
+                <div class="password-strength-fill" id="passwordStrengthFill"></div>
+            </div>
+            <small class="password-strength-text" id="passwordStrengthText"></small>
+        </div>
+        <div class="form-feedback form-feedback-invalid">
+            La contraseña debe tener al menos 8 caracteres
+        </div>
+    </div>
+    
+    <!-- Confirmar Contraseña -->
+    <div class="form-group-siet">
+        <label for="password_confirm" class="form-label-siet form-label-required">
+            <i class="bi bi-lock-fill me-1"></i>Confirmar Contraseña
+        </label>
+        <input 
+            type="password" 
+            class="form-control form-control-siet" 
+            id="password_confirm" 
+            name="password_confirm"
+            placeholder="Repite tu contraseña"
+            required
+        >
+        <div class="form-feedback form-feedback-invalid">
+            Las contraseñas no coinciden
+        </div>
+    </div>
+    
+    <!-- Términos y Condiciones -->
+    <div class="form-group-siet mt-4">
+        <div class="checkbox-siet consent-checkbox">
+            <input 
+                type="checkbox" 
+                id="terminos" 
+                name="terminos"
+                required
+            >
+            <label for="terminos" class="mb-0">
+                Acepto los <a href="/terminos" target="_blank">términos y condiciones</a> 
+                y la <a href="/privacidad" target="_blank">política de privacidad</a>
+            </label>
+        </div>
+        <div class="form-feedback form-feedback-invalid">
+            Debes aceptar los términos y condiciones para continuar
+        </div>
+    </div>
+    
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-siet btn-siet-primary w-100 mb-3">
+        <i class="bi bi-person-plus"></i>
+        Registrarme
+    </button>
+    
+    <!-- Login Link -->
+    <div class="text-center">
+        <p class="mb-0 text-secondary">
+            ¿Ya tienes una cuenta? 
+            <a href="/login">Inicia sesión aquí</a>
+        </p>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Password strength checker
+const passwordInput = document.getElementById('password');
+const strengthFill = document.getElementById('passwordStrengthFill');
+const strengthText = document.getElementById('passwordStrengthText');
+
+passwordInput.addEventListener('input', function() {
+    const password = this.value;
+    let strength = 0;
+    
+    if (password.length >= 8) strength++;
+    if (password.match(/[a-z]/)) strength++;
+    if (password.match(/[A-Z]/)) strength++;
+    if (password.match(/[0-9]/)) strength++;
+    if (password.match(/[^a-zA-Z0-9]/)) strength++;
+    
+    switch(strength) {
+        case 0:
+        case 1:
+            strengthFill.className = 'password-strength-fill weak';
+            strengthText.textContent = 'Débil';
+            break;
+        case 2:
+        case 3:
+            strengthFill.className = 'password-strength-fill medium';
+            strengthText.textContent = 'Media';
+            break;
+        case 4:
+        case 5:
+            strengthFill.className = 'password-strength-fill strong';
+            strengthText.textContent = 'Fuerte';
+            break;
+    }
+});
+
+// Form validation
+document.getElementById('registroForm').addEventListener('submit', function(e) {
+    let isValid = true;
+    
+    // Validate all fields
+    const fields = ['nombre', 'apellido', 'email', 'carrera', 'password', 'password_confirm'];
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (!field.value || (field.type === 'email' && !field.value.includes('@'))) {
+            field.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            field.classList.remove('is-invalid');
+        }
+    });
+    
+    // Check password match
+    const password = document.getElementById('password');
+    const passwordConfirm = document.getElementById('password_confirm');
+    if (password.value !== passwordConfirm.value) {
+        passwordConfirm.classList.add('is-invalid');
+        isValid = false;
+    }
+    
+    // Check terms
+    const terminos = document.getElementById('terminos');
+    if (!terminos.checked) {
+        terminos.classList.add('is-invalid');
+        isValid = false;
+    }
+    
+    if (!isValid) {
+        e.preventDefault();
+    }
+});
+
+// Remove invalid state on input
+document.querySelectorAll('.form-control-siet').forEach(input => {
+    input.addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+    });
+});
+</script>
+{% endblock %}
