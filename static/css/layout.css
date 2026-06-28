@@ -1,0 +1,421 @@
+/* 
+ * SIET Design System - Layout
+ * Estructura de layout principal
+ */
+
+/* ==================== Main Layout ==================== */
+.app-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.app-main {
+    flex: 1;
+    margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-4) var(--space-6);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+}
+
+.app-content {
+    flex: 1;
+    padding: var(--space-6);
+    background-color: var(--color-bg);
+}
+
+.app-footer {
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-4) var(--space-6);
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+}
+
+/* ==================== Auth Layout (Login/Register) ==================== */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    padding: var(--space-6);
+}
+
+.auth-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 450px;
+    padding: var(--space-8);
+}
+
+.auth-brand {
+    text-align: center;
+    margin-bottom: var(--space-6);
+}
+
+.auth-brand i {
+    font-size: 3rem;
+    color: var(--color-primary);
+    margin-bottom: var(--space-3);
+}
+
+.auth-brand h1 {
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--space-2);
+}
+
+.auth-brand p {
+    color: var(--color-text-secondary);
+}
+
+/* ==================== Landing Page Layout ==================== */
+.landing-header {
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-4) 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-fixed);
+}
+
+.landing-hero {
+    padding: var(--space-12) 0;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(37, 99, 235, 0.9) 100%), url('../img/hero-pattern.svg');
+    background-size: cover;
+    color: white;
+    margin-top: 60px;
+}
+
+.landing-hero h1 {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: var(--space-4);
+}
+
+.landing-hero p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.25rem;
+    margin-bottom: var(--space-6);
+}
+
+.landing-section {
+    padding: var(--space-12) 0;
+}
+
+.landing-section-alt {
+    background-color: var(--color-surface);
+}
+
+.landing-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+}
+
+.landing-feature-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    text-align: center;
+    transition: var(--transition-base);
+}
+
+.landing-feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.landing-feature-card i {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    margin-bottom: var(--space-4);
+}
+
+.landing-footer {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--space-8) 0;
+}
+
+.landing-footer a {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.landing-footer a:hover {
+    color: white;
+}
+
+/* ==================== Dashboard Layout ==================== */
+.dashboard-wrapper {
+    display: flex;
+}
+
+.dashboard-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: var(--space-6);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-6);
+}
+
+.dashboard-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.dashboard-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.dashboard-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-4);
+}
+
+.dashboard-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard-card-title {
+    font-size: var(--font-size-h3);
+    color: var(--color-primary);
+    margin: 0;
+}
+
+/* ==================== Assessment Layout ==================== */
+.assessment-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.assessment-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+}
+
+.assessment-progress {
+    margin-bottom: var(--space-6);
+}
+
+.assessment-question-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--space-4);
+}
+
+.assessment-question-number {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-2);
+}
+
+.assessment-question-text {
+    font-size: 1.25rem;
+    color: var(--color-text-main);
+    margin-bottom: var(--space-5);
+}
+
+.assessment-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-6);
+}
+
+/* ==================== Test Layout (Cognitive Tests) ==================== */
+.test-intro-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-md);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.test-instructions {
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
+}
+
+.test-instructions ol {
+    margin: 0;
+    padding-left: var(--space-5);
+}
+
+.test-instructions li {
+    margin-bottom: var(--space-2);
+}
+
+.test-area {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-md);
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.test-stimulus {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: var(--space-8) 0;
+    min-height: 80px;
+}
+
+.test-timer {
+    font-size: 1.5rem;
+    color: var(--color-warning);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+}
+
+.test-response-options {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.test-loading {
+    text-align: center;
+    padding: var(--space-12);
+}
+
+.test-loading .spinner-siet {
+    margin: 0 auto var(--space-4);
+}
+
+/* ==================== Responsive Adjustments ==================== */
+@media (max-width: 992px) {
+    .app-main {
+        margin-left: 0;
+    }
+    
+    .sidebar-siet {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar-siet.show {
+        transform: translateX(0);
+    }
+    
+    .dashboard-charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .landing-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .auth-card {
+        padding: var(--space-5);
+    }
+    
+    .dashboard-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .assessment-actions {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+    
+    .assessment-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .likert-scale {
+        flex-wrap: wrap;
+    }
+    
+    .likert-option {
+        flex: 0 0 45%;
+    }
+}
+
+@media (max-width: 576px) {
+    .stepper-siet {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+    
+    .step-item {
+        flex-direction: row;
+        gap: var(--space-3);
+    }
+    
+    .test-response-options {
+        flex-direction: column;
+    }
+    
+    .test-response-options .btn {
+        width: 100%;
+    }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+    .sidebar-siet,
+    .app-header,
+    .app-footer,
+    .no-print {
+        display: none !important;
+    }
+    
+    .app-main {
+        margin-left: 0;
+    }
+    
+    .card-siet,
+    .dashboard-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
