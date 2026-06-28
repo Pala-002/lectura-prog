@@ -2,6 +2,7 @@
 Esquemas Pydantic para validación de datos
 """
 
+import re
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional, List, Dict, Any
 from datetime import datetime
@@ -43,20 +44,14 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     """Esquema para crear usuario"""
+    username: str = Field(..., min_length=3, max_length=50)
     password: str = Field(..., min_length=8)
-    password_confirm: str = Field(..., min_length=8)
-    accept_terms: bool = False
     
     @classmethod
-    def validate_passwords_match(cls, values):
-        if values.get('password') != values.get('password_confirm'):
-            raise ValueError('Las contraseñas no coinciden')
-        return values
-    
-    @classmethod
-    def validate_terms_accepted(cls, values):
-        if not values.get('accept_terms'):
-            raise ValueError('Debe aceptar los términos y condiciones')
+    def validate_username(cls, values):
+        username = values.get('username')
+        if username and not re.match(r'^[a-zA-Z0-9_]+$', username):
+            raise ValueError('El nombre de usuario solo puede contener letras, números y guiones bajos')
         return values
 
 
@@ -86,7 +81,7 @@ class UserResponse(UserBase):
 
 class UserLogin(BaseModel):
     """Esquema para login"""
-    email: EmailStr
+    username: str
     password: str
 
 

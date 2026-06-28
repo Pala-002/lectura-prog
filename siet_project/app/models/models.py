@@ -30,6 +30,7 @@ class User(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     uuid = Column(String(36), unique=True, index=True, default=lambda: str(uuid_pkg.uuid4()))
+    username = Column(String(50), unique=True, nullable=False, index=True)
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     email = Column(String(100), unique=True, nullable=False, index=True)

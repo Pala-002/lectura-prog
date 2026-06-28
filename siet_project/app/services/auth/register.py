@@ -120,8 +120,14 @@ class RegisterService:
         if existing_email:
             raise ValueError("El email ya está registrado")
         
+        # Verificar que el username no exista
+        existing_username = user_repository.get_by_username(db, user_in.username)
+        if existing_username:
+            raise ValueError("El nombre de usuario ya está registrado")
+        
         # Crear usuario
         user_data = {
+            "username": user_in.username,
             "first_name": user_in.first_name,
             "last_name": user_in.last_name,
             "email": user_in.email,

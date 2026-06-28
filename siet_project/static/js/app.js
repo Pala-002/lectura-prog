@@ -95,13 +95,14 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
     const userData = {
         username: document.getElementById('regUsername').value,
         email: document.getElementById('regEmail').value,
-        full_name: document.getElementById('regFullName').value,
+        first_name: document.getElementById('regFirstName').value,
+        last_name: document.getElementById('regLastName').value,
         password: document.getElementById('regPassword').value,
-        role_id: parseInt(document.getElementById('regRole').value)
+        role_id: 3  // Por defecto Estudiante
     };
     
     try {
-        const user = await apiRequest('/users/', {
+        const user = await apiRequest('/auth/register', {
             method: 'POST',
             body: JSON.stringify(userData)
         });

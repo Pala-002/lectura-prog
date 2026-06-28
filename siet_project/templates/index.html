@@ -166,29 +166,27 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="regUsername" class="form-label">Usuario</label>
-                                <input type="text" class="form-control" id="regUsername" required>
+                                <input type="text" class="form-control" id="regUsername" required pattern="[a-zA-Z0-9_]+" title="Solo letras, números y guión bajo">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="regEmail" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="regEmail" required>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="regFullName" class="form-label">Nombre Completo</label>
-                            <input type="text" class="form-control" id="regFullName" required>
-                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="regPassword" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="regPassword" required>
+                                <label for="regFirstName" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="regFirstName" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="regRole" class="form-label">Rol</label>
-                                <select class="form-select" id="regRole" required>
-                                    <option value="3">Estudiante</option>
-                                    <option value="2">Investigador</option>
-                                </select>
+                                <label for="regLastName" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="regLastName" required>
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="regPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="regPassword" required minlength="8" title="Mínimo 8 caracteres, mayúscula, minúscula, número y carácter especial">
+                            <small class="form-text text-muted">Debe contener: 8+ caracteres, mayúscula, minúscula, número y carácter especial</small>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Registrarse</button>
                     </form>
