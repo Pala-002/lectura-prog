@@ -5,6 +5,7 @@ Modelos de base de datos para el sistema SIET
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
+import uuid as uuid_pkg
 from app.db.database import Base
 
 
@@ -28,15 +29,20 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), unique=True, nullable=False, index=True)
+    uuid = Column(String(36), unique=True, index=True, default=lambda: str(uuid_pkg.uuid4()))
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
     email = Column(String(100), unique=True, nullable=False, index=True)
     password_hash = Column(String(255), nullable=False)
-    full_name = Column(String(100), nullable=False)
+    career = Column(String(100), nullable=True)
+    semester = Column(Integer, nullable=True)
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
+    status = Column(String(20), default="active")  # active, inactive, suspended
     is_active = Column(Boolean, default=True)
     last_login = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    deleted_at = Column(DateTime, nullable=True)
     
     role = relationship("Role", back_populates="users")
     consent = relationship("Consent", back_populates="user", uselist=False)

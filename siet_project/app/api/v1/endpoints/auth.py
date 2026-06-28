@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import Any
 
 from app.db.database import get_db
-from app.schemas.schemas import UserCreate, UserResponse, Token, UserLogin, PasswordResetRequest, PasswordResetConfirm
+from app.schemas.schemas import UserCreate, UserResponse, UserLogin, PasswordResetRequest, PasswordResetConfirm
 from app.services.auth import login_service, register_service, password_service, audit_service
 from app.core.config import settings
 
@@ -72,7 +72,7 @@ async def login(
     try:
         result = login_service.login(
             db=db,
-            username=login_data.username,
+            email=login_data.email,
             password=login_data.password,
             ip_address=ip_address,
             user_agent=user_agent
@@ -90,10 +90,7 @@ async def login(
         return result
     except ValueError as e:
         # Buscar usuario para registrar en auditoría (si existe)
-        from app.repositories import user_repository
-        user = user_repository.get_by_username(db, login_data.username)
-        if not user:
-            user = user_repository.get_by_email(db, login_data.username)
+        user = user_repository.get_by_email(db, login_data.email)
         
         # Registrar login fallido en auditoría
         audit_service.log_login(

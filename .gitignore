@@ -1,7 +1,4 @@
 ```
-# Database
-siet.db
-
 # Python
 __pycache__/
 *.py[cod]
@@ -23,25 +20,26 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
-# Environment
-.env
-.env.local
-.env.*
-.venv/
+# Virtual environments
 venv/
+env/
 ENV/
+.venv/
+.env/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*.tmp
 
 # Logs
 *.log
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Coverage
 .coverage
